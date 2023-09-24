@@ -4,34 +4,34 @@ from sql_conn.config import weather_config
 import requests
 
 def crop_prediction(msg_received):
-    # try:
-    N = int(msg_received['nitrogen'])
-    P = int(msg_received['phosphorous'])
-    K = int(msg_received['pottasium'])
-    ph = float(msg_received['ph'])
-    rainfall = float(msg_received['rainfall'])
+    try:
+        N = int(msg_received['nitrogen'])
+        P = int(msg_received['phosphorous'])
+        K = int(msg_received['pottasium'])
+        ph = float(msg_received['ph'])
+        rainfall = float(msg_received['rainfall'])
 
-    # state = request.form.get("stt")
-    city = msg_received['city']
+        # state = request.form.get("stt")
+        city = msg_received['city']
 
-    if city != None:
-        temperature, humidity = weather_fetch(msg_received)
-        data = np.array([[N, P, K, temperature, humidity, ph, rainfall]])
-        my_prediction = crop_recommendation_model.predict(data)
-        final_prediction = my_prediction[0]
+        if city != None:
+            temperature, humidity = weather_fetch(msg_received)
+            data = np.array([[N, P, K, temperature, humidity, ph, rainfall]])
+            my_prediction = crop_recommendation_model.predict(data)
+            final_prediction = my_prediction[0]
 
-        return  final_prediction
+            return  final_prediction
 
-    else :
+        else :
+            return {
+                "code": -1,
+                "msg": "Unknown Error please try again",
+            }
+    except Exception as e:
         return {
             "code": -1,
-            "msg": "Unknown Error please try again",
+            "msg": str(e),
         }
-    # except Exception as e:
-    #     return {
-    #         "code": -1,
-    #         "msg": str(e),
-    #     }
 
 
 def weather_fetch(msg_received):
@@ -54,6 +54,7 @@ def weather_fetch(msg_received):
 
     if x["cod"] != "404":
         y = x["main"]
+        print(y)
         temperature = round((y["temp"] - 273.15), 2)
         humidity = y["humidity"]
         return temperature, humidity
