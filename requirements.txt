@@ -1,0 +1,5 @@
+mysql
+sqlalchemy
+flask
+bcrpt
+mysql-connector-python
