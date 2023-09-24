@@ -3,3 +3,5 @@ sqlalchemy
 flask
 bcrpt
 mysql-connector-python
+azure
+gunicorn
