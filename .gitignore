@@ -1,0 +1,13 @@
+.idea/
+
+
+*.sql
+*.xml
+*.pyc
+*.db
+*.pem
+*.jpg
+*.ini
+*.log
+*.mwb
+*.bak
