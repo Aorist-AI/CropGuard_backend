@@ -52,17 +52,26 @@ def weather_fetch(msg_received):
         response = requests.get(complete_url)
         x = response.json()
         
-        
+            # Alternative
         # Check if the 'main' key exists in the dictionary.
-        if "main" in x.keys():
-            # Get the temperature and humidity from the dictionary.
-            temperature = x["main"]["temp"]
-            humidity = x["main"]["humidity"]
+        # if "main" in x.keys():
+        #     # Get the temperature and humidity from the dictionary.
+        #     temperature = x["main"]["temp"]
+        #     humidity = x["main"]["humidity"]
 
-            return str(temperature), str(humidity)
+        #     return str(temperature), str(humidity)
                   
+        # else:
+        #     # The 'main' key does not exist, so raise an error.
+        #     raise KeyError("The 'main' key does not exist in the weather data response.")
+        
+        if x["cod"] != "404":
+            y = x["main"]
+            print(y)
+            temperature = round((y["temp"] - 273.15), 2)
+            humidity = y["humidity"]
+            return temperature, humidity
         else:
-            # The 'main' key does not exist, so raise an error.
             raise KeyError("The 'main' key does not exist in the weather data response.")
     except Exception as  e:
         return {"error": str(e)}
