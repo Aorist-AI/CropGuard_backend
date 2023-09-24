@@ -37,8 +37,8 @@ def fert_recommend(msg_received):
             else:
                 key = "Klow"
 
-        response = fertilizer_dic[key]
-        response = jsonify(response)
-        return response
+        response = Markup(str(fertilizer_dic[key]))
+        # response = jsonify(response)
+        return {"response": f"{response}"}
     except Exception as e:
-        return {"Message": str(e)}
+        return {"Error": str(e), "statusCode": 600}
