@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, redirect, render_template, request, session, Markup, Response
-from fertilizer_detection import fertilizer_dic
+from fertilizer_detection.fertilizer_dic import fertilizer_dic
 import pandas as pd
 
 def fert_recommend(msg_received):
