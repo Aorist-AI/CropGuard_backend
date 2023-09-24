@@ -1,4 +1,3 @@
-from flask import Flask, jsonify, redirect, render_template, request, session, Markup, Response
 from fertilizer_detection.fertilizer_dic import fertilizer_dic
 import pandas as pd
 
@@ -37,8 +36,8 @@ def fert_recommend(msg_received):
             else:
                 key = "Klow"
 
-        response = Markup(str(fertilizer_dic[key]))
+        response = str(fertilizer_dic[key])
         # response = jsonify(response)
-        return {"response": f"{response}"}
+        return {"response": f"{response}", }
     except Exception as e:
         return {"Error": str(e), "statusCode": 600}
