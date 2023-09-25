@@ -2,8 +2,9 @@ from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
 from users import login, signup
-from fertilizer_detection import fertilizer
-from disease_detection import crop_prediction
+from fertilizer_detection.fertilizer import fert_recommend
+from crop_detection.crop_prediction import crop_prediction 
+from disease_detection.disease import disease
 
 app = Flask(__name__)
 CORS(app)
@@ -29,11 +30,13 @@ def agro_ai():
     if msg_subject == 'login':
         return login.login(msg_received)
     elif  msg_subject == 'signup':
-         return signup.signup(msg_received)
+         return signup(msg_received)
     elif  msg_subject == 'fert_recommend':
-         return fertilizer.fert_recommend(msg_received)
+         return fert_recommend(msg_received)
     elif  msg_subject == 'crop_recommend':
-         return crop_prediction.crop_prediction(msg_received)
+         return crop_prediction(msg_received)
+    elif  msg_subject == 'crop_disease':
+         return disease(msg_received)
     else:
-        return {"Message": "Wrong subject provided to AgroAI", "statusCode": 404}
+        return {"Message": "Wrong subject provided to Crop_guard", "statusCode": 404}
     
