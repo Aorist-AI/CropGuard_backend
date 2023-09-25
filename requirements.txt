@@ -3,5 +3,6 @@ sqlalchemy==2.0.1
 Flask==2.2.2
 Flask-Cors==3.0.10
 mysql-connector-python
+py-bcrypt
 azure
 gunicorn
