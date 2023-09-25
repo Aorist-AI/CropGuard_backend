@@ -1,5 +1,5 @@
 import numpy as np
-import pickle
+import pickle5 as pickle
 from sql_conn.config import weather_config
 import requests
 
