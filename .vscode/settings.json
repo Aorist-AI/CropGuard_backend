@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/2ebff9a1-b2c1-4790-aa29-37d255b732ae/resourceGroups/Aorist_Labs/providers/Microsoft.Web/sites/cropGuardv1",
+    "appService.deploySubpath": "."
+}
