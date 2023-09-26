@@ -7,6 +7,9 @@ from flask_cors import CORS, cross_origin
 from util import get_country
 from users.login import login
 from users.register import (normal_signup, cont_normal_signup, update_normal_signup)
+from users.verify import (email_verification, phone_number_verification)
+from users.persistence import get_user_personal_info
+
 from fertilizer_detection.fertilizer import fert_recommend
 from crop_recommendation.crop_recommendation import recommend
 from disease_detection.disease import disease
@@ -46,12 +49,27 @@ def agro_ai():
     except (KeyError, TypeError):
         return {"Message": "No subject provided to AgroAI", "statusCode": 404}
     
-    if msg_subject == 'login':
-        return login.login(msg_received)
     
-    elif  msg_subject == 'signup':
-         return signup(msg_received)
+    # ACCOUNT CREATION
+    if msg_subject == "login_normal":
+        return login(msg_received)
+
+    elif msg_subject == "register_normal":
+        return update_normal_signup.register(msg_received, header)
+
+    elif msg_subject == "update_registration":
+        return cont_normal_signup.update(msg_received, header)
     
+    elif msg_subject == "sendVerification":
+        if msg_received["form"] == "email":
+            return email_verification.send(msg_received)
+
+        elif msg_received["form"] == "phoneNumber":
+            return phone_number_verification.send(msg_received)
+        else:
+            return {"Message": "Wrong form provided (1)", "statusCode": 401}
+    
+    # core functions
     elif  msg_subject == 'fert_recommend':
          return fert_recommend(header,msg_received)
     
