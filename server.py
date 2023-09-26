@@ -1,3 +1,6 @@
+import os
+import logging
+
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
@@ -5,9 +8,23 @@ from users import login, signup
 from fertilizer_detection.fertilizer import fert_recommend
 from crop_recommendation.crop_recommendation import recommend
 from disease_detection.disease import disease
+from flask_socketio import SocketIO, emit, join_room
+
+# from safeproxyfix import  SaferProxyFix
 
 app = Flask(__name__)
+
+socketio = SocketIO(app, cors_allowed_origins="*")  # ,async_mode="gevent_uwsgi"
+app.config["socket"] = socketio
 CORS(app)
+cwd = os.getcwd()
+
+app.config["DOWNLOAD"] = os.path.join(cwd, "download#stats")
+try:
+    os.mkdir(app.config["DOWNLOAD"])
+except:
+    pass
+
 
 @app.route('/', methods=["GET", "POST"])
 @cross_origin(origin='*')
@@ -40,3 +57,16 @@ def agro_ai():
     else:
         return {"Message": "Wrong subject provided to Crop_guard", "statusCode": 404}
     
+    
+def log(info):
+    gunicorn_logger = logging.getLogger("gunicorn.error")
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+    app.logger.critical(info)
+
+
+if __name__ == "__main__":
+    # pip install pyopenssl
+    # app.run(host="0.0.0.0", port=5004, debug=True, threaded=True)
+    socketio.run(app, host="0.0.0.0", port=5004, debug=True,
+                 allow_unsafe_werkzeug=True)  # threaded=True, allow_unsafe_werkzeug=True
