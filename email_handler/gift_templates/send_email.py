@@ -1,6 +1,6 @@
 import boto3
 from botocore.exceptions import ClientError
-from email_work.email_templates import send_verification_template
+from email_handler.email_templates import send_verification_template
 from aws_config import aws_config
 
 
