@@ -1,5 +1,5 @@
 import json
-from sql_connection import mysql_connection
+from sql_conn import mysql_conn
 
 
 def check_email(msg_received):
@@ -8,10 +8,10 @@ def check_email(msg_received):
     if email == '0':
         return json.dumps({'phone': '0'})
 
-    conn = mysql_connection.create()
+    conn = mysql_conn.create()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM `users` WHERE `email`= %s ;", (email,))
+    cursor.execute("SELECT * FROM `userss` WHERE `email`= %s ;", (email,))
     row = cursor.fetchall()
 
     if len(row) != 0:

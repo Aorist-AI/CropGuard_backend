@@ -1,4 +1,4 @@
-from sql_connection import mysql_connection
+from sql_conn import mysql_conn
 import random
 
 
@@ -9,11 +9,11 @@ def generate():
 
 
 def check(code: int):
-    conn = mysql_connection.create()
+    conn = mysql_conn.create()
     cursor = conn.cursor()
     # print(code)
 
-    cursor.execute("SELECT COUNT(*) FROM `users_database` ;")
+    cursor.execute("SELECT COUNT(*) FROM `userss_database` ;")
     total_records = cursor.fetchall()
     for t in total_records:
 
@@ -22,7 +22,7 @@ def check(code: int):
             db = f'{(6 - len(str(db))) * "0"}{db}'
         db = f'T{db}'
 
-        cursor.execute("SELECT * FROM `users_database` WHERE `database_name` = %s ;'", (db,))
+        cursor.execute("SELECT * FROM `userss_database` WHERE `database_name` = %s ;'", (db,))
         profile_row = cursor.fetchall()
         conn.close()
         cursor.close()

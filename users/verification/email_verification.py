@@ -1,10 +1,10 @@
 import random
 from datetime import datetime, timedelta
-from sql_conn import mysql_connection
+from sql_conn import mysql_conn
 from email_handler import send_verification_email
 from token import registration_token
 from AL_checkers import validEmail
-from user.register import normal_registration
+from users.register import normal_registration
 import string
 
 
@@ -26,20 +26,20 @@ def send(msg_received):
     q = datetime.now().strftime("%Y-%m-%d %H:%M")
     current_date = datetime.strptime(q[2:], '%y-%m-%d %H:%M')
 
-    conn = mysql_connection.create()
+    conn = mysql_conn.create()
     cursor = conn.cursor()
 
-    # cursor.execute("""SELECT * FROM `users` WHERE `email` = %s ;""", (email,))
+    # cursor.execute("""SELECT * FROM `userss` WHERE `email` = %s ;""", (email,))
     # check_verified = cursor.fetchall()
     # if len(check_verified) != 0:
     #     cursor.close()
     #     conn.close()
     #     return {'Message': 'Email is verified, kindly log in.', 'statusCode': 200}
 
-    cursor.execute("""SELECT * FROM `users` WHERE email = %s ;""", (email,))
-    users = cursor.fetchall()
+    cursor.execute("""SELECT * FROM `userss` WHERE email = %s ;""", (email,))
+    userss = cursor.fetchall()
 
-    if len(users) == 0:
+    if len(userss) == 0:
         cursor.execute("SELECT *FROM `reg_verification` WHERE email = %s; ", (email,))
         reg_verification = cursor.fetchall()
 
@@ -116,7 +116,7 @@ def verify(msg_received, header):
     except KeyError:
         return {"Message": "A key is missing for code verification", "statusCode": 401}
 
-    conn = mysql_connection.create()
+    conn = mysql_conn.create()
     cursor = conn.cursor()
 
     if form.lower() == 'email':

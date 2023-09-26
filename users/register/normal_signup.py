@@ -1,9 +1,9 @@
 import json
 from AL_checkers import checkEmail, checkPhone
-from sql_connection import mysql_connection
+from sql_conn import mysql_conn
 from mongodb_connection import mongo_configuration
 import pymongo
-from tokenz import generate_locator, generate_dbname, tokens
+from token import generate_locator, generate_dbname, tokens
 import bcrypt
 from AL_checkers.disallowed_characters import disallowed, not_allowed, phone_char
 from AL_checkers.validEmail import valid_email
@@ -11,8 +11,8 @@ from AL_checkers import check_if_verified, age_calculator
 from AL_checkers.generate_display_name import generate
 from AL_checkers.length_of_words import name_length, about_length
 from datetime import datetime, timedelta
-from tokenz import registration_token
-from tamu_pool import add_user
+from token import registration_token
+from agro_pool import add_users
 from referral import set_referral_code  # , add_referred
 
 
@@ -89,18 +89,18 @@ def register(msg_received, header):
 
     else:
 
-        conn = mysql_connection.create()
+        conn = mysql_conn.create()
         cursor = conn.cursor()
 
         db_key = mongo_configuration.read_config()
         client = pymongo.MongoClient(db_key["link"])
 
         try:
-            # Create an account for the user
+            # Create an account for the users
             locator = str(generate_locator.generate())
             db_name = generate_dbname.generate()
             cursor.execute("""
-            INSERT INTO `users` (`user_id`, `display_name`, `what_i_do`, `email`, `phone_number`, `password`, 
+            INSERT INTO `userss` (`users_id`, `display_name`, `what_i_do`, `email`, `phone_number`, `password`, 
             `locator`,`location`, `date`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP);""",
                            (display_name, '0', email, phone_number, password, locator, 'KE'))
 
@@ -108,24 +108,24 @@ def register(msg_received, header):
             if form == 'phoneNumber':
                 form = "phone_number"
             # print(form, key)
-            cursor.execute(f"SELECT * FROM `users` WHERE {form} = %s ;", (key,))
+            cursor.execute(f"SELECT * FROM `userss` WHERE {form} = %s ;", (key,))
             row = cursor.fetchall()
             tkn = ''
 
             # Create the database
             for record in row:
-                user_id = int(record[0])
-                referral_code = set_referral_code.add({'user_id': user_id, 'locator': locator})["referral_code"]
+                users_id = int(record[0])
+                referral_code = set_referral_code.add({'users_id': users_id, 'locator': locator})["referral_code"]
 
                 cursor.execute("""
-                            INSERT INTO `users_database` (`database_id`, `database_name`, `user_id`, `locator`, `date`)
+                            INSERT INTO `userss_database` (`database_id`, `database_name`, `users_id`, `locator`, `date`)
                              VALUES (NULL, %s , %s , %s , CURRENT_TIMESTAMP);
-                            """, (db_name, user_id, locator))
+                            """, (db_name, users_id, locator))
 
                 db = client[db_name]
                 collection = db["personal_information"]
                 x = {
-                    'user_id': int(user_id),
+                    'users_id': int(users_id),
                     'locator': locator,
                     'referral_code': referral_code,
                     'gender': gender,
@@ -144,16 +144,16 @@ def register(msg_received, header):
                 }
                 collection.insert_one(x)
 
-                # Add user to pool
+                # Add users to pool
                 pool_data = {
-                    'user_id': user_id,
+                    'users_id': users_id,
                     'locator': locator,
                     'gender': gender,
                     'interested_in': interested_in,
                     'country': country,
                     'mood': ''
                 }
-                add_user.add(pool_data)
+                add_users.add(pool_data)
 
                 # If referred
                 if ref_code != 0:
@@ -163,7 +163,7 @@ def register(msg_received, header):
                     except KeyError:
                         pass
 
-                tkn = str(tokens.generate_token(user_id, locator))
+                tkn = str(tokens.generate_token(users_id, locator))
 
             conn.close()
             cursor.close()

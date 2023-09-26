@@ -30,7 +30,7 @@ def reset_post_code():
             return password.upper()
 
 
-def user_locator():
+def users_locator():
     alphabet = string.ascii_letters + string.digits
     while True:
         password = ''.join(secrets.choice(alphabet) for i in range(9))
@@ -39,7 +39,7 @@ def user_locator():
             return password.upper()
 
 
-def user_code():
+def users_code():
     alphabet = string.ascii_letters + string.digits
     while True:
         password = ''.join(secrets.choice(alphabet) for i in range(11))

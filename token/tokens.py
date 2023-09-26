@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import jwt
-from sql_connection import mysql_connection
-from tokenz import secret_config
+from sql_conn import mysql_conn
+from token import secret_config
 
 the_key = secret_config.secret_config()
 my_string = the_key["secret_key"]
@@ -10,13 +10,13 @@ the_quick_key = secret_config.quickgen_secret_config()
 the_quick_string = the_quick_key["secret_key"]
 
 
-def get_user(user_id, locator):
-    conn = mysql_connection.create()
+def get_users(users_id, locator):
+    conn = mysql_conn.create()
     cursor = conn.cursor()
 
     try:
         cursor.execute(
-            "SELECT * FROM `users` WHERE user_id= %s AND locator=  %s  ;", (user_id, locator))
+            "SELECT * FROM `userss` WHERE users_id= %s AND locator=  %s  ;", (users_id, locator))
         row = cursor.fetchall()
         conn.close()
         cursor.close()
@@ -32,13 +32,13 @@ def get_user(user_id, locator):
         return 0
 
 
-def generate_token(user_id, locator):
+def generate_token(users_id, locator):
     try:
 
         payload = {
             'exp': datetime.utcnow() + timedelta(days=30, seconds=0),
             'iat': datetime.utcnow(),
-            'sub': user_id,
+            'sub': users_id,
             'string': locator
         }
         return jwt.encode(
@@ -54,12 +54,12 @@ def quick_gen(the_token):
     try:
 
         payload = jwt.decode(the_token, the_quick_string, algorithm='HS256')
-        user_id = payload['sub']
+        users_id = payload['sub']
         locator = payload['string']
         payload = {
             'exp': datetime.utcnow() + timedelta(seconds=80),
             'iat': datetime.utcnow(),
-            'sub': user_id,
+            'sub': users_id,
             'string': locator
         }
         return jwt.encode(
@@ -76,7 +76,7 @@ def get_id(auth_token):
         payload = jwt.decode(auth_token, my_string, algorithms='HS256')
         _id = int(payload['sub'])
         locator = payload['string']
-        key = str(get_user(_id, locator))
+        key = str(get_users(_id, locator))
         if key == '1':
             return _id
         else:

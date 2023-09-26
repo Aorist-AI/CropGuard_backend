@@ -1,19 +1,19 @@
-from user.persistence import get_user_info
-from tokenz import tokens
-from tokenz import registration_token
-from user.register import update_normal_registration
+from users.persistence import get_users_info
+from token import tokens
+from token import registration_token
+from users.register import update_normal_registration
 
 
 def update(msg_received, header):
-    user_id = tokens.get_id(header)
+    users_id = tokens.get_id(header)
 
-    if not str(user_id).isalnum():
+    if not str(users_id).isalnum():
         return {'Message': 'login in again.', "statusCode": 600}
 
     else:
-        user_data = get_user_info.get(user_id=user_id)
-        email = str(user_data['email'])
-        phone_number = str(user_data['phone_number'])
+        users_data = get_users_info.get(users_id=users_id)
+        email = str(users_data['email'])
+        phone_number = str(users_data['phone_number'])
         print(email, phone_number)
 
         key = 0

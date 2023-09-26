@@ -1,4 +1,4 @@
-from sql_connection import mysql_connection
+from sql_conn import mysql_conn
 
 
 def check(msg_received):
@@ -11,10 +11,10 @@ def check(msg_received):
     if display_name == '0':
         return {"Message": "Display name is available", "statusCode": 200}
 
-    conn = mysql_connection.create()
+    conn = mysql_conn.create()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT * FROM `users` WHERE display_name = %s ;', (display_name,))
+    cursor.execute('SELECT * FROM `userss` WHERE display_name = %s ;', (display_name,))
     data = cursor.fetchall()
     cursor.close()
     conn.close()

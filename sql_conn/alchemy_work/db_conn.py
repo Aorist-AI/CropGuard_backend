@@ -6,7 +6,7 @@ import urllib.parse
 def connection(database=''):
     key = config.config()
     database_password = urllib.parse.quote_plus(key['DB_PASSWORD'])
-    engine = db.create_engine(f"mysql+mysqlconnector://{key['DB_USERNAME']}:{database_password}@{key['DB_HOST']}/{database}")
+    engine = db.create_engine(f"mysql+mysqlconnector://{key['DB_usersNAME']}:{database_password}@{key['DB_HOST']}/{database}")
 
     conn = engine.connect()
     metadata = db.MetaData()  # extracting the metadata

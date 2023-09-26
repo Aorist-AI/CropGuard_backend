@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import jwt
-from tokenz import secret_config
-from tokenz import tokens
+from token import secret_config
+from token import tokens
 
 
 def generate_token(form: str, key: str):

@@ -5,7 +5,8 @@ from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
 from util import get_country
-from users import login, signup
+from users.login import login
+from users.register import (normal_signup, cont_normal_signup, update_normal_signup)
 from fertilizer_detection.fertilizer import fert_recommend
 from crop_recommendation.crop_recommendation import recommend
 from disease_detection.disease import disease

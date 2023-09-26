@@ -1,8 +1,8 @@
 from AL_checkers import checkEmail, checkPhone
-from sql_connection import mysql_connection
+from sql_conn import mysql_conn
 from mongodb_connection import mongo_configuration
 import pymongo
-from tokenz import tokens
+from token import tokens
 import bcrypt
 from AL_checkers.disallowed_characters import disallowed, not_allowed, phone_char
 from AL_checkers.validEmail import valid_email
@@ -10,12 +10,11 @@ from AL_checkers import check_if_verified, age_calculator
 from AL_checkers.generate_display_name import generate
 from AL_checkers.length_of_words import name_length, about_length
 from datetime import datetime, timedelta
-from tokenz import registration_token
-from tamu_pool import add_user
-from referral import add_referred, check_referral_code
+from token import registration_token
+from agro_pool import add_users
 import json
 from bson import json_util
-from user.register import register_country
+from users.register import register_country
 import logging
 
 logging.basicConfig(filename='app.log', level=logging.DEBUG,
@@ -94,35 +93,35 @@ def register(msg_received, header):
         
     else:
 
-        conn = mysql_connection.create()
+        conn = mysql_conn.create()
         cursor = conn.cursor()
 
         mongo_key = mongo_configuration.read_config()
         client = pymongo.MongoClient(mongo_key["link"])
 
         try:
-            # Update Created account for the user
+            # Update Created account for the users
 
             if form == 'phoneNumber':
                 form = 'phone_number'
 
             cursor.execute(f"""
-            UPDATE `users` SET `display_name` = %s, `what_i_do` = %s,
+            UPDATE `userss` SET `display_name` = %s, `what_i_do` = %s,
                 `location` = %s, `date` = CURRENT_TIMESTAMP
                 WHERE  {form} = %s ;
             """, (display_name, '0', country, key))
 
             conn.commit()
-            cursor.execute(f"SELECT * FROM `users` WHERE `{form}`= %s ;", (key,))
+            cursor.execute(f"SELECT * FROM `userss` WHERE `{form}`= %s ;", (key,))
             row = cursor.fetchall()
             tkn = ''
 
             # Create the database
             for record in row:
-                user_id = int(record[0])
+                users_id = int(record[0])
                 locator = record[6]
 
-                cursor.execute("SELECT * FROM `users_database` WHERE `user_id` = %s ;", (user_id,))
+                cursor.execute("SELECT * FROM `userss_database` WHERE `users_id` = %s ;", (users_id,))
                 row = cursor.fetchall()
                 db_name = ''
                 old_country = ''
@@ -141,7 +140,7 @@ def register(msg_received, header):
                     old_gender = x['gender']
 
                 x = {
-                    # 'user_id': int(user_id),
+                    # 'users_id': int(users_id),
                     # 'locator': locator,
                     'gender': gender,
                     'location': location,  # [{'longitude':1234,'latitude':1234,'address':}]
@@ -157,17 +156,17 @@ def register(msg_received, header):
                     'referred_by': referral_code,
                     'registration': 1
                 }
-                collection.update_one({'user_id': user_id}, {"$set": x})
+                collection.update_one({'users_id': users_id}, {"$set": x})
 
-                # Add user to referred table
+                # Add users to referred table
                 if referral_code != 0:
                     add_referred.add({'locator': locator, 'referral_code': referral_code})
 
                 client.close()
 
-                # Add user to pool
+                # Add users to pool
                 pool_data = {
-                    'user_id': user_id,
+                    'users_id': users_id,
                     'locator': locator,
                     'gender': gender,
                     'interested_in': interested_in,
@@ -176,11 +175,11 @@ def register(msg_received, header):
                     'old_country': old_country,
                     'old_gender': old_gender
                 }
-                # add_user.add(pool_data)
-                add_user.remove_update(pool_data)
+                # add_users.add(pool_data)
+                add_users.remove_update(pool_data)
                 register_country.register(country)
 
-                tkn = str(tokens.generate_token(user_id, locator))
+                tkn = str(tokens.generate_token(users_id, locator))
             # app.logger.info('Checkpoint 5')
             conn.close()
             cursor.close()

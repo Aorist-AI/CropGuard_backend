@@ -1,8 +1,7 @@
-from sql_connection import mysql_connection
-from tokenz import tokens
+from sql_conn import mysql_conn
+from token import tokens
 import bcrypt
-from user.persistence import get_user_info
-from subscription import check_subscription
+from users.persistence import get_users_info
 
 
 def login(msg_received):
@@ -12,12 +11,12 @@ def login(msg_received):
     except KeyError:
         return {"Message": "A key is missing", "statusCode": 401}
 
-    user_id = " "
+    users_id = " "
 
-    conn = mysql_connection.create()
+    conn = mysql_conn.create()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM users where phone_number = %s OR email = %s  ;", (key, key))
+    cursor.execute("SELECT * FROM userss where phone_number = %s OR email = %s  ;", (key, key))
     row = cursor.fetchall()
 
     # while row is not None:
@@ -27,22 +26,19 @@ def login(msg_received):
         for record in row:
             # print(record)
 
-            user_id = int(record[0])
+            users_id = int(record[0])
             locator = str(record[6])
             hashed_password = str(record[5]).encode('utf8')
 
         if bcrypt.checkpw(plain_password, hashed_password):
 
-            tkn = str(tokens.generate_token(user_id, locator))
-            user_data = get_user_info.get(user_id=user_id)
-            registration = user_data['personalInformation']['registration']
-            check_sub = check_subscription.check(header=tkn)
+            tkn = str(tokens.generate_token(users_id, locator))
+            users_data = get_users_info.get(users_id=users_id)
+            registration = users_data['personalInformation']['registration']
             cursor.close()
             conn.close()
 
-            return {"Message": "Sign in successful", "token": tkn, "registration": registration,
-                    "subscription": int(check_sub),
-                    "statusCode": 200}
+            return {"Message": "Sign in successful", "token": tkn, "registration": registration, "statusCode": 200}
 
         else:
             cursor.close()
@@ -54,8 +50,3 @@ def login(msg_received):
         conn.close()
         return {"Message": "wrong login details provided", "statusCode": 404}
 
-#
-# print(login({
-#     "key": '+254713234177',
-#     'password': 'password'
-# }))
