@@ -69,6 +69,16 @@ def agro_ai():
         else:
             return {"Message": "Wrong form provided (1)", "statusCode": 401}
     
+    elif msg_subject == "verify":
+        if msg_received["form"] == "email":
+            return email_verification.verify(msg_received, header)
+
+        elif msg_received["form"] == "phoneNumber":
+            return phone_number_verification.verify(msg_received, header)
+        else:
+            return {"Message": "Wrong form provided (1)", "statusCode": 401}
+
+    
     # core functions
     elif  msg_subject == 'fert_recommend':
          return fert_recommend(header,msg_received)
