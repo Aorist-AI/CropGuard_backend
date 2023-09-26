@@ -52,13 +52,13 @@ def agro_ai():
          return signup(msg_received)
     
     elif  msg_subject == 'fert_recommend':
-         return fert_recommend(msg_received)
+         return fert_recommend(header,msg_received)
     
     elif  msg_subject == 'crop_recommend':
-         return recommend(msg_received)
+         return recommend(header, msg_received)
     
     elif  msg_subject == 'crop_disease':
-         return disease(msg_received)
+         return disease(header, msg_received)
     
     # UTIL
     elif msg_subject == "getCountry":
