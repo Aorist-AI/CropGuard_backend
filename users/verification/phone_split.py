@@ -1,5 +1,5 @@
 import pymongo
-from mongodb_connection import mongo_configuration
+from mongo_conn import mongo_configuration
 
 
 def check(string: str):

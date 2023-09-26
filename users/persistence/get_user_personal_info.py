@@ -1,4 +1,4 @@
-from mongodb_connection import mongo_configuration
+from mongo_conn import mongo_configuration
 import pymongo
 import json
 from bson import json_util
