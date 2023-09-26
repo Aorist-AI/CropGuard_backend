@@ -65,18 +65,12 @@ def register(msg_received, header):
         else:
             return {"Message": "Invalid form type", "statusCode": 401}
 
-        referral_code = 0
-        try:
-            referral_code = str(msg_received["referral_code"]).replace(" ", "")
-            referral_code = check_referral_code.check({"referral_code": referral_code})["referral_code"]
-        except Exception:
-            pass
         # app.logger.info('Checkpoint 2')
     except KeyError as e:
         return {"Message": "A key is missing for registrations", "statusCode": 401, "error": str(e)}
 
-    checkm = json.loads(checkEmail.check_email({'email': email}))
-    checkp = json.loads(checkPhone.check_phoneNo({"phoneNumber": phone_number}))
+    checkmail = json.loads(checkEmail.check_email({'email': email}))
+    checkphone = json.loads(checkPhone.check_phoneNo({"phoneNumber": phone_number}))
 
     if age < 18:
         return {"Message": "You should be 18 years old or above to join Tamu.", "statusCode": 401}
@@ -153,14 +147,9 @@ def register(msg_received, header):
                     'interest': interest,
                     'profile_image': profile_image,
                     'country': country,
-                    'referred_by': referral_code,
                     'registration': 1
                 }
                 collection.update_one({'users_id': users_id}, {"$set": x})
-
-                # Add users to referred table
-                if referral_code != 0:
-                    add_referred.add({'locator': locator, 'referral_code': referral_code})
 
                 client.close()
 
