@@ -1,4 +1,4 @@
-from checkers.disallowed_characters import disallowed
+from AL_checkers.disallowed_characters import disallowed
 
 
 def about_length(string: str):

@@ -1,15 +1,15 @@
 import json
-from checkers import checkEmail, checkPhone
+from AL_checkers import checkEmail, checkPhone
 from sql_connection import mysql_connection
 from mongodb_connection import mongo_configuration
 import pymongo
 from tokenz import generate_locator, generate_dbname, tokens
 import bcrypt
-from checkers.disallowed_characters import disallowed, not_allowed, phone_char
-from checkers.validEmail import valid_email
-from checkers import check_if_verified, age_calculator
-from checkers.generate_display_name import generate
-from checkers.length_of_words import name_length, about_length
+from AL_checkers.disallowed_characters import disallowed, not_allowed, phone_char
+from AL_checkers.validEmail import valid_email
+from AL_checkers import check_if_verified, age_calculator
+from AL_checkers.generate_display_name import generate
+from AL_checkers.length_of_words import name_length, about_length
 from datetime import datetime, timedelta
 from tokenz import registration_token
 from tamu_pool import add_user

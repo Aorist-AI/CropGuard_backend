@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from sql_conn import mysql_connection
 from email_handler import send_verification_email
 from token import registration_token
-from checkers import validEmail
+from AL_checkers import validEmail
 from user.register import normal_registration
 import string
 
