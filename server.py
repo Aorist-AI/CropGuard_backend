@@ -6,7 +6,7 @@ from flask_cors import CORS, cross_origin
 
 from util import get_country
 from users.login import login
-from users.register import (normal_signup, cont_normal_signup, update_normal_signup)
+from users.register import (cont_normal_signup, update_normal_signup)
 from users.verify import (email_verification, phone_number_verification)
 from users.persistence import get_user_personal_info
 
