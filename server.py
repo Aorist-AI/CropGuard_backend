@@ -3,7 +3,7 @@ from flask_cors import CORS, cross_origin
 
 from users import login, signup
 from fertilizer_detection.fertilizer import fert_recommend
-from crop_detection.crop_prediction import crop_prediction 
+from crop_recommendation.crop_recommendation import recommend
 from disease_detection.disease import disease
 
 app = Flask(__name__)
@@ -34,7 +34,7 @@ def agro_ai():
     elif  msg_subject == 'fert_recommend':
          return fert_recommend(msg_received)
     elif  msg_subject == 'crop_recommend':
-         return crop_prediction(msg_received)
+         return recommend(msg_received)
     elif  msg_subject == 'crop_disease':
          return disease(msg_received)
     else:

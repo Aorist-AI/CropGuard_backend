@@ -1,9 +1,9 @@
 import numpy as np
 import pickle
-from sql_conn.config import weather_config
+from agro_config.config import weather_config
 import requests
 
-def crop_prediction(msg_received):
+def recommend(msg_received):
     try:
         N = int(msg_received['nitrogen'])
         P = int(msg_received['phosphorous'])

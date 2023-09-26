@@ -1,5 +1,5 @@
 import mysql.connector
-from sql_conn.config import config
+from agro_config.config import config
 
 
 def create(database="tamu"):

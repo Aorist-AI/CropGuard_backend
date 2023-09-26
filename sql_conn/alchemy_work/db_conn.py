@@ -1,5 +1,5 @@
 import sqlalchemy as db
-from sql_conn import config
+from agro_config import config
 import urllib.parse
 
 
