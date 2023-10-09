@@ -9,7 +9,7 @@ def register(country_name: str):
     key = mongo_configuration.read_config()
     client = pymongo.MongoClient(key["link"])
 
-    db = client["tamu"]
+    db = client["agrotech"]
     country_collection = db["countries"]
 
     if country_collection.count_documents({"country": country_name}) == 0:
