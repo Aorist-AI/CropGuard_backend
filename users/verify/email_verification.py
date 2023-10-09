@@ -2,7 +2,7 @@ import random
 from datetime import datetime, timedelta
 from sql_conn import mysql_conn
 from email_handler import send_verification_email
-from tokenz import registration_tokenz
+from tokenz import registration_token
 from AL_checkers import validEmail
 from users.register import normal_registration
 import string
@@ -54,7 +54,7 @@ def send(msg_received):
                    """, (email, 0, code, str(q), 1, 'unverified', 'email'))
                 conn.commit()
                 # Add registration tokenz to response
-                res.update({'tokenz': registration_tokenz.generate_tokenz_verification('email', email, password)})
+                res.update({'tokenz': registration_token.generate_tokenz_verification('email', email, password)})
 
             cursor.close()
             conn.close()
@@ -80,7 +80,7 @@ def send(msg_received):
                             conn.commit()
 
                             # Add registration tokenz to response
-                            res.update({'tokenz': registration_tokenz.generate_tokenz_verification('email', email,password)})
+                            res.update({'tokenz': registration_token.generate_tokenz_verification('email', email,password)})
 
                         cursor.close()
                         conn.close()
@@ -102,7 +102,7 @@ def send(msg_received):
 
 
 def verify(msg_received, header):
-    reg_tokenz = registration_tokenz.get_data_verification(header)
+    reg_tokenz = registration_token.get_data_verification(header)
     # print(reg_tokenz)
     if reg_tokenz == 0:
         return {"Message": "Invalid tokenz provided for verification, restart the process.", "statusCode": 401}
