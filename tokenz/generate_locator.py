@@ -1,4 +1,4 @@
-from token import picture_code
+from tokenz import picture_code
 from sql_conn import mysql_conn
 
 

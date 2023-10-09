@@ -3,7 +3,7 @@ from AL_checkers import checkEmail, checkPhone
 from sql_conn import mysql_conn
 from mongo_conn import mongo_configuration
 import pymongo
-from token import generate_locator, generate_dbname, tokens
+from tokenz import generate_locator, generate_dbname, tokens
 import bcrypt
 from AL_checkers.disallowed_characters import disallowed, not_allowed, phone_char
 from AL_checkers.validEmail import valid_email
@@ -11,22 +11,22 @@ from AL_checkers import check_if_verified, age_calculator
 from AL_checkers.generate_display_name import generate
 from AL_checkers.length_of_words import name_length, about_length
 from datetime import datetime, timedelta
-from token import registration_token
-from agro_pool import add_users
+from tokenz import registration_token
+from agro_pool import add_user
 from referral import set_referral_code  # , add_referred
 
 
 def register(msg_received, header):
-    reg_token = registration_token.get_data(header)
-    if reg_token == 0:
-        return {"Message": "Invalid token provided for verification", "statusCode": 401}
+    reg_tokenz = registration_token.get_data(header)
+    if reg_tokenz == 0:
+        return {"Message": "Invalid tokenz provided for verification", "statusCode": 401}
 
     try:
 
         display_name = generate(name_length(str(msg_received["displayName"]))).strip()
         about = about_length(str(msg_received["about"]))
-        form = reg_token['form']  # str(msg_received['form']).lower()
-        key = str(reg_token['key']).lower().strip()  # str(msg_received['key']).strip()
+        form = reg_tokenz['form']  # str(msg_received['form']).lower()
+        key = str(reg_tokenz['key']).lower().strip()  # str(msg_received['key']).strip()
         email = str(0)
         phone_number = str(0)
 
@@ -153,7 +153,7 @@ def register(msg_received, header):
                     'country': country,
                     'mood': ''
                 }
-                add_users.add(pool_data)
+                add_user.add(pool_data)
 
                 # If referred
                 if ref_code != 0:
@@ -163,12 +163,12 @@ def register(msg_received, header):
                     except KeyError:
                         pass
 
-                tkn = str(tokens.generate_token(users_id, locator))
+                tkn = str(tokens.generate_tokenz(users_id, locator))
 
             conn.close()
             cursor.close()
             client.close()
-            return {"Message": "Account created", "token": tkn, "statusCode": 200}
+            return {"Message": "Account created", "tokenz": tkn, "statusCode": 200}
 
         except TypeError:
             client.close()

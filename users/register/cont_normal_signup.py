@@ -1,6 +1,6 @@
 from users.persistence import get_users_info
-from token import tokens
-from token import registration_token
+from tokenz import tokens
+from tokenz import registration_token
 from users.register import update_normal_registration
 
 
@@ -26,6 +26,6 @@ def update(msg_received, header):
             form = 'phoneNumber'
             key = phone_number
 
-        reg_tkn = registration_token.generate_token_verification(form=form, key=key, password='123')
+        reg_tkn = registration_token.generate_tokenz_verification(form=form, key=key, password='123')
 
         return update_normal_registration.register(msg_received, reg_tkn)

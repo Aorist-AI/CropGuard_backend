@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta
 import jwt
-from token import secret_config
-from token import tokens
+from tokenz import secret_config
+from tokenz import tokenz
 
 
-def generate_token(form: str, key: str):
+def generate_tokenz(form: str, key: str):
     try:
-        the_key = secret_config.secret_config(section='reg_token')
+        the_key = secret_config.secret_config(section='reg_tokenz')
         my_string = the_key["secret_key"]
 
         payload = {
@@ -24,11 +24,11 @@ def generate_token(form: str, key: str):
         return 0
 
 
-def get_data(auth_token):
+def get_data(auth_tokenz):
     try:
-        the_key = secret_config.secret_config(section='reg_token')
+        the_key = secret_config.secret_config(section='reg_tokenz')
         my_string = the_key["secret_key"]
-        payload = jwt.decode(auth_token, my_string, algorithms='HS256')
+        payload = jwt.decode(auth_tokenz, my_string, algorithms='HS256')
         form = payload['form']
         key = payload['key']
 
@@ -37,15 +37,15 @@ def get_data(auth_token):
     except jwt.ExpiredSignatureError as e:
 
         return 0
-    except jwt.InvalidTokenError as e:
+    except jwt.InvalidtokenzError as e:
 
         return 0
 
 
-# This token contains the form and key and password field
-def generate_token_verification(form: str, key: str, password: str):
+# This tokenz contains the form and key and password field
+def generate_tokenz_verification(form: str, key: str, password: str):
     try:
-        the_key = secret_config.secret_config(section='reg_token')
+        the_key = secret_config.secret_config(section='reg_tokenz')
         my_string = the_key["secret_key"]
 
         payload = {
@@ -65,11 +65,11 @@ def generate_token_verification(form: str, key: str, password: str):
 
 
 # The return value contains the form and key and password field
-def get_data_verification(auth_token):
+def get_data_verification(auth_tokenz):
     try:
-        the_key = secret_config.secret_config(section='reg_token')
+        the_key = secret_config.secret_config(section='reg_tokenz')
         my_string = the_key["secret_key"]
-        payload = jwt.decode(auth_token, my_string, algorithms='HS256')
+        payload = jwt.decode(auth_tokenz, my_string, algorithms='HS256')
         form = payload['form']
         key = payload['key']
         password = payload['password']
@@ -79,7 +79,7 @@ def get_data_verification(auth_token):
     except jwt.ExpiredSignatureError as e:
 
         return 0
-    except jwt.InvalidTokenError as e:
+    except jwt.InvalidtokenzError as e:
 
         return 0
 

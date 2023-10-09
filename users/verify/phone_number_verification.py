@@ -4,7 +4,7 @@ from datetime import datetime
 from datetime import timedelta
 from sms import send_verification_sms
 from AL_checkers import disallowed_characters
-from token import registration_token
+from tokenz import registration_tokenz
 from users.register import normal_registration
 import string
 
@@ -49,8 +49,8 @@ def send(msg_received):
                 (NULL, %s , %s , %s , %s , %s , CURRENT_TIMESTAMP, %s , %s );
                """, (0, phone_number, code, str(q), 1, 'unverified', 'phoneNumber'))
                 conn.commit()
-                # Add registration token to response
-                res.update({'token': registration_token.generate_token_verification('phoneNumber', phone_number,
+                # Add registration tokenz to response
+                res.update({'tokenz': registration_tokenz.generate_tokenz_verification('phoneNumber', phone_number,
                                                                                     password)})
 
             cursor.close()
@@ -74,8 +74,8 @@ def send(msg_received):
                             WHERE `phone_number` = %s ;
                             """, (code, str(q), count + 1, reg_phone_number))
                             conn.commit()
-                            # Add registration token to response
-                            res.update({'token': registration_token.generate_token_verification('phoneNumber',
+                            # Add registration tokenz to response
+                            res.update({'tokenz': registration_tokenz.generate_tokenz_verification('phoneNumber',
                                                                                                 phone_number,
                                                                                                 password)})
 
@@ -91,14 +91,14 @@ def send(msg_received):
 
 
 def verify(msg_received, header):
-    reg_token = registration_token.get_data_verification(header)
-    if reg_token == 0:
-        return {"Message": "Invalid token provided for verification, restart the process.", "statusCode": 401}
+    reg_tokenz = registration_tokenz.get_data_verification(header)
+    if reg_tokenz == 0:
+        return {"Message": "Invalid tokenz provided for verification, restart the process.", "statusCode": 401}
     try:
         code = msg_received['code']
-        form = reg_token['form']
-        key = reg_token['key']
-        password = reg_token['password']
+        form = reg_tokenz['form']
+        key = reg_tokenz['key']
+        password = reg_tokenz['password']
     except KeyError:
         return {"Message": "A key is missing for code verification", "statusCode": 401}
 
@@ -137,10 +137,10 @@ def verify(msg_received, header):
                 # "profile_image": 0
             }
             res = normal_registration.register(x, header)
-            # print(reg_token)
+            # print(reg_tokenz)
             # print(res)
             if res['statusCode'] == 200:
-                return {"Message": "Your phone number has been verified", "token": res["token"], "statusCode": 200}
+                return {"Message": "Your phone number has been verified", "tokenz": res["tokenz"], "statusCode": 200}
 
             else:
                 # print(res)

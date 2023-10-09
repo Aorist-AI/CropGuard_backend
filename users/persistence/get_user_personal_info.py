@@ -3,7 +3,7 @@ import pymongo
 import json
 from bson import json_util
 from users.persistence import get_users_db
-from token import tokens
+from tokenz import tokens
 from sql_conn import mysql_conn
 from subscription import check_subscription
 

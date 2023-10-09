@@ -2,7 +2,7 @@ import random
 from datetime import datetime, timedelta
 from sql_conn import mysql_conn
 from email_handler import send_verification_email
-from token import registration_token
+from tokenz import registration_tokenz
 from AL_checkers import validEmail
 from users.register import normal_registration
 import string
@@ -53,8 +53,8 @@ def send(msg_received):
                     (NULL, %s , %s , %s , %s , %s , CURRENT_TIMESTAMP, %s , %s );
                    """, (email, 0, code, str(q), 1, 'unverified', 'email'))
                 conn.commit()
-                # Add registration token to response
-                res.update({'token': registration_token.generate_token_verification('email', email, password)})
+                # Add registration tokenz to response
+                res.update({'tokenz': registration_tokenz.generate_tokenz_verification('email', email, password)})
 
             cursor.close()
             conn.close()
@@ -79,8 +79,8 @@ def send(msg_received):
                                 """, (code, str(q), count + 1, reg_email))
                             conn.commit()
 
-                            # Add registration token to response
-                            res.update({'token': registration_token.generate_token_verification('email', email,password)})
+                            # Add registration tokenz to response
+                            res.update({'tokenz': registration_tokenz.generate_tokenz_verification('email', email,password)})
 
                         cursor.close()
                         conn.close()
@@ -102,16 +102,16 @@ def send(msg_received):
 
 
 def verify(msg_received, header):
-    reg_token = registration_token.get_data_verification(header)
-    # print(reg_token)
-    if reg_token == 0:
-        return {"Message": "Invalid token provided for verification, restart the process.", "statusCode": 401}
+    reg_tokenz = registration_tokenz.get_data_verification(header)
+    # print(reg_tokenz)
+    if reg_tokenz == 0:
+        return {"Message": "Invalid tokenz provided for verification, restart the process.", "statusCode": 401}
 
     try:
         code = msg_received['code']
-        form = reg_token['form']
-        key = reg_token['key']
-        password = reg_token['password']
+        form = reg_tokenz['form']
+        key = reg_tokenz['key']
+        password = reg_tokenz['password']
         # print(form, key)
     except KeyError:
         return {"Message": "A key is missing for code verification", "statusCode": 401}
@@ -153,7 +153,7 @@ def verify(msg_received, header):
             res = dict(normal_registration.register(x, header))
             # print(res)
             if res["statusCode"] == 200:
-                return {"Message": "Your email has been verified", "token": res["token"], "statusCode": 200}
+                return {"Message": "Your email has been verified", "tokenz": res["tokenz"], "statusCode": 200}
 
             else:
                 return {"Message": "Your email has been verified, but there was an error in registering you.",

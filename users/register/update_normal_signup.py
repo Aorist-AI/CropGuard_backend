@@ -2,7 +2,7 @@ from AL_checkers import checkEmail, checkPhone
 from sql_conn import mysql_conn
 from mongo_conn import mongo_configuration
 import pymongo
-from token import tokens
+from tokenz import tokenz
 import bcrypt
 from AL_checkers.disallowed_characters import disallowed, not_allowed, phone_char
 from AL_checkers.validEmail import valid_email
@@ -10,7 +10,7 @@ from AL_checkers import check_if_verified, age_calculator
 from AL_checkers.generate_display_name import generate
 from AL_checkers.length_of_words import name_length, about_length
 from datetime import datetime, timedelta
-from token import registration_token
+from tokenz import registration_tokenz
 from agro_pool import add_users
 import json
 from bson import json_util
@@ -22,16 +22,16 @@ logging.basicConfig(filename='app.log', level=logging.DEBUG,
 
 
 def register(msg_received, header):
-    reg_token = registration_token.get_data_verification(header)
-    if reg_token == 0:
-        return {"Message": "Invalid token provided for verification", "statusCode": 401}
+    reg_tokenz = registration_tokenz.get_data_verification(header)
+    if reg_tokenz == 0:
+        return {"Message": "Invalid tokenz provided for verification", "statusCode": 401}
 
     try:
 
         display_name = generate(name_length(str(msg_received["displayName"]))).strip()
         about = about_length(str(msg_received["about"]))
-        form = reg_token['form']  # str(msg_received['form']).lower()
-        key = reg_token['key']  # str(msg_received['key']).strip()
+        form = reg_tokenz['form']  # str(msg_received['form']).lower()
+        key = reg_tokenz['key']  # str(msg_received['key']).strip()
         email = str(0)
         phone_number = str(0)
         # password = str(bcrypt.hashpw(str(msg_received["password"]), bcrypt.gensalt()))
@@ -168,11 +168,11 @@ def register(msg_received, header):
                 add_users.remove_update(pool_data)
                 register_country.register(country)
 
-                tkn = str(tokens.generate_token(users_id, locator))
+                tkn = str(tokenz.generate_tokenz(users_id, locator))
             # app.logger.info('Checkpoint 5')
             conn.close()
             cursor.close()
-            return json.dumps({"Message": "Account created", "token": tkn, "statusCode": 200})
+            return json.dumps({"Message": "Account created", "tokenz": tkn, "statusCode": 200})
 
         except TypeError:
             client.close()

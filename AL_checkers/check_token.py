@@ -1,4 +1,4 @@
-from token.tokens import get_id
+from tokenz.tokenz import get_id
 
 
 def check(header):

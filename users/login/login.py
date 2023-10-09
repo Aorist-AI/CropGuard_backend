@@ -1,5 +1,5 @@
 from sql_conn import mysql_conn
-from token import tokens
+from tokenz import tokens
 import bcrypt
 from users.persistence import get_users_info
 
@@ -32,13 +32,13 @@ def login(msg_received):
 
         if bcrypt.checkpw(plain_password, hashed_password):
 
-            tkn = str(tokens.generate_token(users_id, locator))
+            tkn = str(tokens.generate_tokenz(users_id, locator))
             users_data = get_users_info.get(users_id=users_id)
             registration = users_data['personalInformation']['registration']
             cursor.close()
             conn.close()
 
-            return {"Message": "Sign in successful", "token": tkn, "registration": registration, "statusCode": 200}
+            return {"Message": "Sign in successful", "tokenz": tkn, "registration": registration, "statusCode": 200}
 
         else:
             cursor.close()

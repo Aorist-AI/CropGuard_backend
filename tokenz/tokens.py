@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import jwt
 from sql_conn import mysql_conn
-from token import secret_config
+from tokenz import secret_config
 
 the_key = secret_config.secret_config()
 my_string = the_key["secret_key"]
@@ -32,7 +32,7 @@ def get_users(users_id, locator):
         return 0
 
 
-def generate_token(users_id, locator):
+def generate_tokenz(users_id, locator):
     try:
 
         payload = {
@@ -50,10 +50,10 @@ def generate_token(users_id, locator):
         return 0
 
 
-def quick_gen(the_token):
+def quick_gen(the_tokenz):
     try:
 
-        payload = jwt.decode(the_token, the_quick_string, algorithm='HS256')
+        payload = jwt.decode(the_tokenz, the_quick_string, algorithm='HS256')
         users_id = payload['sub']
         locator = payload['string']
         payload = {
@@ -71,28 +71,28 @@ def quick_gen(the_token):
         return e
 
 
-def get_id(auth_token):
+def get_id(auth_tokenz):
     try:
-        payload = jwt.decode(auth_token, my_string, algorithms='HS256')
+        payload = jwt.decode(auth_tokenz, my_string, algorithms='HS256')
         _id = int(payload['sub'])
         locator = payload['string']
         key = str(get_users(_id, locator))
         if key == '1':
             return _id
         else:
-            return "Error invalid token"
+            return "Error invalid tokenz"
 
         # print(str(payload['iat'])+" "+str(payload['exp']))
     except jwt.ExpiredSignatureError:
-        return "Error expired token"  # print('Signature expired. Please log in again.')
-    except jwt.InvalidTokenError:
-        return "Error invalid token"  # print('Invalid token. Please log in again.')
+        return "Error expired tokenz"  # print('Signature expired. Please log in again.')
+    except jwt.InvalidtokenzError:
+        return "Error invalid tokenz"  # print('Invalid tokenz. Please log in again.')
 
-# p=generate_token('4',"b4u6z8UP5cNaZbGrSB")
+# p=generate_tokenz('4',"b4u6z8UP5cNaZbGrSB")
 # print(p)
 # time.sleep(7)
-# decode_token(p)
-# p=generate_token(5)
+# decode_tokenz(p)
+# p=generate_tokenz(5)
 # print(len(p))
 # print(p)
 # print(my_string)
