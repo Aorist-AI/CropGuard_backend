@@ -2,7 +2,7 @@ from AL_checkers import checkEmail, checkPhone
 from sql_conn import mysql_conn
 from mongo_conn import mongo_configuration
 import pymongo
-from tokenz import tokenz
+from tokenz import tokens
 import bcrypt
 from AL_checkers.disallowed_characters import disallowed, not_allowed, phone_char
 from AL_checkers.validEmail import valid_email
@@ -10,8 +10,8 @@ from AL_checkers import check_if_verified, age_calculator
 from AL_checkers.generate_display_name import generate
 from AL_checkers.length_of_words import name_length, about_length
 from datetime import datetime, timedelta
-from tokenz import registration_tokenz
-from agro_pool import add_users
+from tokenz import registration_token
+from agro_pool import add_user
 import json
 from bson import json_util
 from users.register import register_country
@@ -22,7 +22,7 @@ logging.basicConfig(filename='app.log', level=logging.DEBUG,
 
 
 def register(msg_received, header):
-    reg_tokenz = registration_tokenz.get_data_verification(header)
+    reg_tokenz = registration_token.get_data_verification(header)
     if reg_tokenz == 0:
         return {"Message": "Invalid tokenz provided for verification", "statusCode": 401}
 
@@ -165,10 +165,10 @@ def register(msg_received, header):
                     'old_gender': old_gender
                 }
                 # add_users.add(pool_data)
-                add_users.remove_update(pool_data)
+                add_user.remove_update(pool_data)
                 register_country.register(country)
 
-                tkn = str(tokenz.generate_tokenz(users_id, locator))
+                tkn = str(tokens.generate_tokenz(users_id, locator))
             # app.logger.info('Checkpoint 5')
             conn.close()
             cursor.close()

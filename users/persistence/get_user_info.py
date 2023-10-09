@@ -3,7 +3,6 @@ from mongo_conn import mongo_configuration
 import pymongo
 import json
 from bson import json_util
-from subscription import check_subscription
 
 
 def get(email=None, users_locator=None, users_id=None, client=None):
