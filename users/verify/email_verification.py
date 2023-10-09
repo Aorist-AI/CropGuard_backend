@@ -4,7 +4,7 @@ from sql_conn import mysql_conn
 from email_handler import send_verification_email
 from tokenz import registration_token
 from AL_checkers import validEmail
-from users.register import normal_registration
+from users.register import normal_signup
 import string
 
 
@@ -150,7 +150,7 @@ def verify(msg_received, header):
                 "interest": ['running', 'swimming', 'dancing'],
                 # "profile_image": 0
             }
-            res = dict(normal_registration.register(x, header))
+            res = dict(normal_signup.register(x, header))
             # print(res)
             if res["statusCode"] == 200:
                 return {"Message": "Your email has been verified", "tokenz": res["tokenz"], "statusCode": 200}
