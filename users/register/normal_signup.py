@@ -13,7 +13,7 @@ from AL_checkers.length_of_words import name_length, about_length
 from datetime import datetime, timedelta
 from tokenz import registration_token
 from agro_pool import add_user
-from referral import set_referral_code  # , add_referred
+# from referral import set_referral_code  # , add_referred
 
 
 def register(msg_received, header):
@@ -115,7 +115,7 @@ def register(msg_received, header):
             # Create the database
             for record in row:
                 users_id = int(record[0])
-                referral_code = set_referral_code.add({'users_id': users_id, 'locator': locator})["referral_code"]
+                # referral_code = set_referral_code.add({'users_id': users_id, 'locator': locator})["referral_code"]
 
                 cursor.execute("""
                             INSERT INTO `userss_database` (`database_id`, `database_name`, `users_id`, `locator`, `date`)
@@ -127,7 +127,6 @@ def register(msg_received, header):
                 x = {
                     'users_id': int(users_id),
                     'locator': locator,
-                    'referral_code': referral_code,
                     'gender': gender,
                     'location': [],  # [{'longitude':1234,'latitude':1234,'address':}]
                     'about': about,

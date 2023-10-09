@@ -2,10 +2,10 @@ import random
 from sql_conn import mysql_conn
 from datetime import datetime
 from datetime import timedelta
-from sms import send_verification_sms
+from sms import send_verification
 from AL_checkers import disallowed_characters
-from tokenz import registration_tokenz
-from users.register import normal_registration
+from tokenz import registration_token
+from users.register import normal_signup
 import string
 
 
@@ -40,7 +40,7 @@ def send(msg_received):
         reg_verification = cursor.fetchall()
 
         if len(reg_verification) == 0:
-            res = send_verification_sms.send(phone_number, code)
+            res = send_verification.send(phone_number, code)
 
             if res["statusCode"] == 200:
                 cursor.execute("""
@@ -50,7 +50,7 @@ def send(msg_received):
                """, (0, phone_number, code, str(q), 1, 'unverified', 'phoneNumber'))
                 conn.commit()
                 # Add registration tokenz to response
-                res.update({'tokenz': registration_tokenz.generate_tokenz_verification('phoneNumber', phone_number,
+                res.update({'tokenz': registration_token.generate_tokenz_verification('phoneNumber', phone_number,
                                                                                     password)})
 
             cursor.close()
@@ -66,7 +66,7 @@ def send(msg_received):
 
                 if end_date < current_date:
                     if count < 10:
-                        res = send_verification_sms.send(phone_number, code)
+                        res = send_verification.send(phone_number, code)
 
                         if res["statusCode"] == 200:
                             cursor.execute("""
@@ -75,7 +75,7 @@ def send(msg_received):
                             """, (code, str(q), count + 1, reg_phone_number))
                             conn.commit()
                             # Add registration tokenz to response
-                            res.update({'tokenz': registration_tokenz.generate_tokenz_verification('phoneNumber',
+                            res.update({'tokenz': registration_token.generate_tokenz_verification('phoneNumber',
                                                                                                 phone_number,
                                                                                                 password)})
 
@@ -91,7 +91,7 @@ def send(msg_received):
 
 
 def verify(msg_received, header):
-    reg_tokenz = registration_tokenz.get_data_verification(header)
+    reg_tokenz = registration_token.get_data_verification(header)
     if reg_tokenz == 0:
         return {"Message": "Invalid tokenz provided for verification, restart the process.", "statusCode": 401}
     try:
@@ -136,7 +136,7 @@ def verify(msg_received, header):
                 "interest": ['running', 'swimming', 'dancing'],
                 # "profile_image": 0
             }
-            res = normal_registration.register(x, header)
+            res = normal_signup.register(x, header)
             # print(reg_tokenz)
             # print(res)
             if res['statusCode'] == 200:

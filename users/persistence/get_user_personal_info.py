@@ -2,10 +2,9 @@ from mongo_conn import mongo_configuration
 import pymongo
 import json
 from bson import json_util
-from users.persistence import get_users_db
+from users.persistence import get_user_db
 from tokenz import tokens
 from sql_conn import mysql_conn
-from subscription import check_subscription
 
 
 def get(header):
@@ -21,11 +20,7 @@ def get(header):
     client = pymongo.MongoClient(key["link"])
     personal_information = {"statusCode": 401, "displayName": 0, "email": 0, "phoneNumber": 0}
 
-    # Check if users is subscribed
-    check_sub = check_subscription.check(header=header, client=client)
-    personal_information.update({"subscription": int(check_sub)})
-
-    db_name = get_users_db.get(users_id)
+    db_name = get_user_db.get(users_id)
     db = client[db_name]
     collection = db["personal_information"]
 
