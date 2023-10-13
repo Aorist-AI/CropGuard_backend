@@ -35,6 +35,6 @@ def send(phone, code):
         return{"Error": str(e), "statusCode": 500}
 
 
-# message = 'wassup'
-# sms_client = SMSClient('+254702639254', message)
-# sms_client.send_sms()
+message = 'wassup'
+sms_client = SMSClient('+254742079321', message)
+sms_client.send_sms()
