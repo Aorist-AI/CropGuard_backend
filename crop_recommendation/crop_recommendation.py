@@ -3,6 +3,12 @@ import pickle
 from agro_config.config import weather_config
 import requests
 
+from joblib import load
+
+crop_recommendation_model_path = 'Trained_Model/RandomForest.pkl'
+crop_recommendation_model = load(crop_recommendation_model_path)
+
+
 def recommend(msg_received):
     try:
         N = int(msg_received['nitrogen'])
