@@ -76,6 +76,6 @@ def weather_fetch(msg_received):
     except Exception as  e:
         return {"error": str(e)}
 
-crop_recommendation_model_path = 'Trained_Model/RandomForest.pkl'
-crop_recommendation_model = pickle.load(
-    open(crop_recommendation_model_path, 'rb'))
+# crop_recommendation_model_path = 'Trained_Model/RandomForest.pkl'
+# crop_recommendation_model = pickle.load(
+#     open(crop_recommendation_model_path, 'rb'))
